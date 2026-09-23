@@ -1,0 +1,207 @@
+[
+ {
+  "service_id": 1,
+  "area": 50,
+  "addons": {},
+  "subtotal": 5000,
+  "total": 5000
+ },
+ {
+  "service_id": 1,
+  "area": 3,
+  "addons": {},
+  "subtotal": 300,
+  "total": 3000
+ },
+ {
+  "service_id": 1,
+  "area": 50,
+  "addons": {
+   "10:0": 2,
+   "20:0": 2,
+   "30:0": 2
+  },
+  "subtotal": 9000,
+  "total": 9000
+ },
+ {
+  "service_id": 2,
+  "area": 50,
+  "addons": {},
+  "subtotal": 10000,
+  "total": 10000
+ },
+ {
+  "service_id": 2,
+  "area": 3,
+  "addons": {},
+  "subtotal": 600,
+  "total": 3000
+ },
+ {
+  "service_id": 2,
+  "area": 50,
+  "addons": {
+   "10:0": 2,
+   "20:0": 2,
+   "30:0": 2,
+   "40:0": 2,
+   "50:0": 2,
+   "60:0": 7.5
+  },
+  "subtotal": 22250,
+  "total": 22250
+ },
+ {
+  "service_id": 3,
+  "area": 50,
+  "addons": {},
+  "subtotal": 15000,
+  "total": 15000
+ },
+ {
+  "service_id": 3,
+  "area": 3,
+  "addons": {},
+  "subtotal": 900,
+  "total": 3000
+ },
+ {
+  "service_id": 3,
+  "area": 50,
+  "addons": {
+   "10:0": 2,
+   "20:0": 2,
+   "40:0": 2
+  },
+  "subtotal": 19000,
+  "total": 19000
+ },
+ {
+  "service_id": 4,
+  "area": 0,
+  "addons": {},
+  "subtotal": 0,
+  "total": 3000
+ },
+ {
+  "service_id": 4,
+  "area": 0,
+  "addons": {},
+  "subtotal": 0,
+  "total": 3000
+ },
+ {
+  "service_id": 4,
+  "area": 0,
+  "addons": {
+   "10:0": 2,
+   "20:0": 2
+  },
+  "subtotal": 2000,
+  "total": 3000
+ },
+ {
+  "service_id": 5,
+  "area": 50,
+  "addons": {},
+  "subtotal": 10000,
+  "total": 10000
+ },
+ {
+  "service_id": 5,
+  "area": 3,
+  "addons": {},
+  "subtotal": 600,
+  "total": 3000
+ },
+ {
+  "service_id": 5,
+  "area": 50,
+  "addons": {
+   "10:0": 2,
+   "20:0": 2,
+   "30:0": 2,
+   "40:0": 2,
+   "50:0": 2,
+   "60:0": 7.5
+  },
+  "subtotal": 22250,
+  "total": 22250
+ },
+ {
+  "service_id": 6,
+  "area": 0,
+  "addons": {},
+  "subtotal": 0,
+  "total": 3000
+ },
+ {
+  "service_id": 6,
+  "area": 0,
+  "addons": {},
+  "subtotal": 0,
+  "total": 3000
+ },
+ {
+  "service_id": 6,
+  "area": 0,
+  "addons": {
+   "10:0": 2,
+   "20:0": 2
+  },
+  "subtotal": 2000,
+  "total": 3000
+ },
+ {
+  "service_id": 7,
+  "area": 50,
+  "addons": {},
+  "subtotal": 5000,
+  "total": 5000
+ },
+ {
+  "service_id": 7,
+  "area": 3,
+  "addons": {},
+  "subtotal": 300,
+  "total": 3000
+ },
+ {
+  "service_id": 7,
+  "area": 50,
+  "addons": {
+   "10:0": 2,
+   "30:0": 2
+  },
+  "subtotal": 8000,
+  "total": 8000
+ },
+ {
+  "service_id": 8,
+  "area": 50,
+  "addons": {},
+  "subtotal": 10000,
+  "total": 10000
+ },
+ {
+  "service_id": 8,
+  "area": 3,
+  "addons": {},
+  "subtotal": 600,
+  "total": 3000
+ },
+ {
+  "service_id": 8,
+  "area": 50,
+  "addons": {
+   "10:0": 2,
+   "30:0": 2,
+   "40:0": 2,
+   "50:0": 2,
+   "60:0": 7.5
+  },
+  "subtotal": 21250,
+  "total": 21250
+ }
+]

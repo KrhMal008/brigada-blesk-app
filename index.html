@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Бригада Блеск · расчёт уборки</title>
+  <meta name="description" content="Мини-приложение Telegram: расчёт стоимости уборки за минуту. Демо бота записи на услуги.">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <img class="logo" src="assets/logo.png" alt="">
+    <div>
+      <h1 id="bizName">Бригада Блеск</h1>
+      <p class="muted">Расчёт уборки за минуту</p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Где нужна уборка</h2>
+      <div class="segmented" id="rooms"></div>
+    </section>
+
+    <section>
+      <h2>Услуга</h2>
+      <div class="services" id="services"></div>
+    </section>
+
+    <section id="areaBlock" class="card">
+      <div class="row">
+        <h2 class="inline">Площадь</h2>
+        <label class="area-input"><input id="areaNum" type="number" inputmode="numeric" min="1" max="2000" value="50"> м²</label>
+      </div>
+      <input id="areaRange" type="range" min="10" max="300" step="5" value="50">
+      <p class="muted small" id="areaHint"></p>
+    </section>
+
+    <section id="addonsBlock">
+      <h2>Дополнительно</h2>
+      <div id="addons"></div>
+    </section>
+
+    <section class="card">
+      <h2 class="inline">Промокод</h2>
+      <input id="promo" class="text" type="text" maxlength="32" placeholder="Если есть" autocomplete="off">
+      <p class="muted small">Скидку по промокоду бот применит в чате.</p>
+    </section>
+
+    <section class="card" id="breakdown"></section>
+  </main>
+
+  <footer class="bar">
+    <div>
+      <div class="muted small">Итого</div>
+      <div class="total" id="total">0 ₽</div>
+    </div>
+    <button id="fallbackBtn" class="primary" hidden>Выбрать дату</button>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -9,7 +9,7 @@ const NBSP = " ";
 const money = (n) => n.toLocaleString("ru-RU").replace(/\s/g, NBSP) + NBSP + "₽";
 
 // Иконки одного стиля: контур 1.75, 24×24, цвет из currentColor.
-const svg = (paths) => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+const svg = (paths, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
 const ICON = {
   sparkles: svg('<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>'),
   spray: svg('<path d="M8 11h6v9a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1z"/><path d="M9 11V8h4v3"/><path d="M13 8h2.5l2 2"/><path d="M19 4h.01M21 7h.01M19 7h.01"/>'),
@@ -25,9 +25,14 @@ const CHECK = svg('<path d="M5 12l4 4 10-10"/>').replace('width="22" height="22"
 const CHEVRON = '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
 const MINUS = svg('<path d="M6 12h12"/>');
 const PLUS = svg('<path d="M12 6v12M6 12h12"/>');
+const SHIELD = svg('<path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>', 18);
+const CLOCK = svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', 18);
 
-const state = { room: null, serviceId: null, area: 50, addons: {}, open: new Set() };
+const state = { room: null, serviceId: null, area: 50, addons: {}, open: new Set(), infoOpen: false };
 let catalog;
+
+// Тексты состава в конфиге начинаются со строчной: «пыль на поверхностях…».
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 function haptic() { tg?.HapticFeedback?.selectionChanged(); }
 function servicesForRoom() { return catalog.services.filter((s) => s.room === state.room); }
@@ -67,11 +72,62 @@ function renderServices() {
   }));
 }
 
+// Блок «Что входит» под карточками услуг: состав, что не входит, длительность.
+function renderServiceInfo() {
+  const service = currentService();
+  const box = $("serviceInfo");
+  const parts = [];
+  if (service?.includes) parts.push(["Входит", service.includes]);
+  if (service?.excludes) parts.push(["Не входит", service.excludes]);
+  box.hidden = !service || (parts.length === 0 && !service.duration);
+  if (box.hidden) return;
+  box.open = state.infoOpen;
+  $("serviceInfoName").textContent = service.short || service.name;
+  const body = parts.map(([label, text]) => {
+    const p = document.createElement("p");
+    const b = document.createElement("b");
+    b.textContent = label;
+    p.append(b, document.createTextNode(cap(text)));
+    return p;
+  });
+  if (service.duration) {
+    const p = document.createElement("p");
+    p.className = "duration";
+    p.innerHTML = CLOCK + "<span></span>";
+    p.querySelector("span").textContent = cap(service.duration);
+    body.push(p);
+  }
+  $("serviceInfoBody").replaceChildren(...body);
+}
+
+// Чипы примерной площади над ползунком: подпись из конфига уже с м², показываем как есть.
+function renderPresets() {
+  const presets = catalog.area_presets?.[state.room] || [];
+  const box = $("areaPresets");
+  box.hidden = presets.length === 0;
+  box.replaceChildren(...presets.map((p) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip" + (p.m2 === state.area ? " on" : "");
+    b.setAttribute("aria-pressed", p.m2 === state.area);
+    b.textContent = p.label.replace(/ (м²)/g, NBSP + "$1"); // «100 м²» не разрываем переносом
+    b.onclick = () => { haptic(); setArea(p.m2); };
+    return b;
+  }));
+}
+
+function setArea(v) {
+  state.area = Math.min(2000, Math.max(1, Math.round(Number(v) || 1)));
+  renderArea();
+  renderTotals();
+}
+
 function renderArea() {
   const service = currentService();
   const block = $("areaBlock");
   block.hidden = !service || service.price_per_m2 == null;
   if (block.hidden) return;
+  renderPresets();
   const range = $("areaRange");
   $("areaNum").value = state.area;
   range.value = Math.min(Number(range.max), Math.max(Number(range.min), state.area));
@@ -179,7 +235,16 @@ function renderTotals() {
   }
 }
 
-function renderAll() { renderRooms(); renderServices(); renderArea(); renderAddons(); renderTotals(); }
+function renderGuarantee() {
+  const text = catalog.business.guarantee;
+  const line = $("guarantee");
+  line.hidden = !text;
+  if (!text) return;
+  line.innerHTML = SHIELD + "<span></span>";
+  line.querySelector("span").textContent = text;
+}
+
+function renderAll() { renderRooms(); renderServices(); renderServiceInfo(); renderArea(); renderAddons(); renderTotals(); }
 
 function submit() {
   const data = JSON.stringify(payload());
@@ -199,10 +264,10 @@ async function init() {
   state.room = catalog.rooms[0];
   selectService(servicesForRoom()[0]?.id ?? null);
 
-  const setArea = (v) => { state.area = Math.min(2000, Math.max(1, Math.round(Number(v) || 1))); renderArea(); renderTotals(); };
   $("areaRange").oninput = (e) => setArea(e.target.value);
   $("areaNum").onchange = (e) => setArea(e.target.value);
   $("fallbackBtn").onclick = submit;
+  $("serviceInfo").ontoggle = () => { state.infoOpen = $("serviceInfo").open; };
   $("promoLink").onclick = () => { $("promoBox").hidden = false; $("promoLink").hidden = true; $("promo").focus(); };
 
   if (inTelegram) {
@@ -218,6 +283,7 @@ async function init() {
     applyTheme(media.matches ? "dark" : "light");
     media.addEventListener("change", (e) => applyTheme(e.matches ? "dark" : "light"));
   }
+  renderGuarantee();
   renderAll();
 }
 

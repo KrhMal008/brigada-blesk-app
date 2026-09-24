@@ -24,6 +24,7 @@
 :root[data-theme=dark]:not([data-tg]) { --bg: #0F1F1E; --card: #17302E; --text: #E6F4F2; --hint: #93B5B1; }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; } /* иначе display: flex у чипов и гарантии перебивает hidden */
 html, body { overflow-x: clip; }
 body {
   margin: 0; background: var(--bg); color: var(--text);
@@ -56,7 +57,8 @@ h2.inline { font-size: 17px; line-height: 22px; font-weight: 600; margin: 0; let
 .muted { color: var(--hint); }
 .small { font-size: 13px; line-height: 18px; }
 .card { background: var(--card); border-radius: var(--r-lg); padding: var(--card-pad); margin-top: var(--gap); box-shadow: var(--shadow); }
-:root[data-theme=dark] .card, :root[data-theme=dark] .service, :root[data-theme=dark] details.group, :root[data-theme=dark] .segmented {
+:root[data-theme=dark] .card, :root[data-theme=dark] .service, :root[data-theme=dark] details.group, :root[data-theme=dark] .segmented,
+:root[data-theme=dark] details.about {
   border: 1px solid var(--line);
 }
 .row { display: flex; justify-content: space-between; align-items: center; gap: var(--gap); }
@@ -94,6 +96,26 @@ h2.inline { font-size: 17px; line-height: 22px; font-weight: 600; margin: 0; let
   .service .name { font-size: 14px; }
 }
 
+/* ---------- что входит в выбранную услугу ---------- */
+details.about { background: var(--card); border-radius: var(--r-lg); margin-top: var(--gap); box-shadow: var(--shadow); overflow: hidden; }
+details.about summary {
+  list-style: none; min-height: 52px; padding: 0 var(--card-pad); display: flex; align-items: center; gap: 8px;
+  font-size: 16px; line-height: 22px; font-weight: 600; cursor: pointer;
+}
+details.about summary::-webkit-details-marker { display: none; }
+details.about summary .title { flex: none; }
+details.about summary .svc {
+  flex: 1; min-width: 0; color: var(--hint); font-size: 14px; font-weight: 400; text-align: right;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+details.about summary .chev { color: var(--hint); flex: none; transition: transform .2s; }
+details.about[open] summary .chev { transform: rotate(90deg); }
+.about-body { padding: 4px var(--card-pad) var(--card-pad); border-top: 1px solid var(--line); }
+.about-body p { margin: 8px 0 0; font-size: 15px; line-height: 20px; overflow-wrap: anywhere; }
+.about-body b { display: block; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--hint); margin-bottom: 2px; }
+.about-body .duration { display: flex; gap: 8px; align-items: flex-start; color: var(--accent-ink); font-weight: 500; }
+.about-body .duration svg { flex: none; margin-top: 1px; }
+
 /* ---------- площадь ---------- */
 .area-input { position: relative; display: block; }
 .area-input input {
@@ -112,6 +134,16 @@ input[type=range]::-webkit-slider-thumb {
 input[type=range]::-moz-range-thumb {
   width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 2px solid var(--accent); box-shadow: 0 2px 6px rgba(0, 0, 0, .18);
 }
+/* Два столбца, как у карточек услуг: на 320 px ничего не вылезает; нечётный последний чип на всю ширину. */
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: var(--gap); }
+.chips .chip:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.chip {
+  position: relative; min-height: 36px; padding: 4px 8px; border-radius: var(--r-pill); min-width: 0; text-align: center;
+  border: 1px solid var(--line); background: var(--bg); color: var(--text);
+  font-size: 14px; line-height: 18px; font-weight: 500; overflow-wrap: anywhere;
+}
+.chip::before { content: ""; position: absolute; inset: -4px 0; } /* зона нажатия 44 px по высоте */
+.chip.on { background: var(--brand-dark); border-color: var(--brand-dark); color: #fff; font-weight: 600; }
 .range-labels { display: flex; justify-content: space-between; color: var(--hint); font-size: 13px; line-height: 18px; }
 #areaHint { margin: 8px 0 0; }
 
@@ -150,6 +182,14 @@ details.group[open] summary .chev { transform: rotate(90deg); }
   color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-md);
 }
 .m2 .unit { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--hint); pointer-events: none; }
+
+/* ---------- гарантия над расчётом ---------- */
+.guarantee {
+  display: flex; gap: 8px; align-items: flex-start; margin: var(--gap) 0 0; padding: 10px 12px;
+  border-radius: var(--r-md); background: var(--tint); color: var(--text); font-size: 13px; line-height: 18px;
+}
+.guarantee svg { flex: none; color: var(--accent-ink); }
+.guarantee + .card { margin-top: var(--gap); }
 
 /* ---------- расчёт и промокод ---------- */
 #breakdown .line { display: flex; justify-content: space-between; gap: var(--gap); padding: 6px 0; font-size: 15px; line-height: 20px; }
